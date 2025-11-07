@@ -1,0 +1,1 @@
+# FastWords是基于Electron开发的背单词软件
