@@ -44,7 +44,76 @@ const explanationChineseWord = document.getElementById('explanationChineseWord')
 const videoCanvas = document.getElementById("canvas")
 const example = document.querySelector(".example")
 const recentFilesList = document.getElementById('recentFilesList');
-
+const animationElement = {
+    logo: document.querySelector(".animation img"),
+    h1: document.querySelector(".animation h1"),
+    p: document.querySelector(".animation p"),
+    main: document.querySelector(".animation")
+}
+async function loadStartScreen() {
+    animationElement.main.style.display = 'flex'
+    const tl = gsap.timeline()
+    await tl.from(animationElement.logo, {
+        y: 20,
+        opacity: 0
+    }).from(animationElement.h1, {
+        y: 20,
+        opacity: 0
+    }).from(animationElement.p, {
+        y: 20,
+        opacity: 0
+    })
+    await gsap.to(animationElement.main, {
+        opacity: 0
+    })
+    animationElement.main.style.display = 'none'
+}
+const firstOpen = document.querySelector(".first-open")
+if (localStorage.getItem("first-open") == 'false') {
+    loadStartScreen()
+} else {
+    loadFirstOpenScreen()
+}
+async function loadFirstOpenScreen() {
+    const steps = [...document.querySelectorAll('[class*="step"]')]
+    steps.forEach(i => i.style.display = 'none')
+    firstOpen.style.display = 'flex'
+    await new Promise(res => setTimeout(res, 1000))
+    steps[0].style.display = 'initial'
+    gsap.from(steps[0], {
+        y: 20,
+        opacity: 0
+    })
+    await new Promise(res => setTimeout(res, 2000))
+    await gsap.to(steps[0], {
+        opacity: 0
+    })
+    steps[0].style.display = 'none'
+    steps[1].style.display = 'flex'
+    await gsap.from(steps[1], {
+        x: 20,
+        opacity: 0
+    })
+    await new Promise(res => setTimeout(res, 2000))
+    await gsap.to(steps[1], {
+        x: -20,
+        opacity: 0
+    })
+    steps[1].style.display = 'none'
+    steps[2].style.display = 'flex'
+    gsap.from(steps[2], {
+        x: 20,
+        opacity: 0,
+    })
+    const continueBtn = steps[2].querySelector("button")
+    continueBtn.onclick = async () => {
+        await gsap.to(firstOpen, {
+            opacity: 0
+        })
+        firstOpen.style.display = 'none'
+        localStorage.setItem("first-open", 'false')
+    }
+}
 example.value = `{
     "word1": "单词释义",
     "word2": "单词释义",
@@ -82,7 +151,7 @@ function saveRecentFiles() {
 function addRecentFile(fileName, filePath, fileData) {
     // Remove if already exists
     recentFiles = recentFiles.filter(file => file.path !== filePath);
-    
+
     // Add to the beginning
     recentFiles.unshift({
         name: fileName,
@@ -91,12 +160,12 @@ function addRecentFile(fileName, filePath, fileData) {
         timestamp: Date.now(),
         size: new Blob([fileData]).size
     });
-    
+
     // Keep only the last 7 files
     if (recentFiles.length > 7) {
         recentFiles = recentFiles.slice(0, 7);
     }
-    
+
     saveRecentFiles();
     updateRecentFilesList();
 }
@@ -104,7 +173,7 @@ function addRecentFile(fileName, filePath, fileData) {
 // Update the recent files list in UI
 function updateRecentFilesList() {
     recentFilesList.innerHTML = '';
-    
+
     if (recentFiles.length === 0) {
         const emptyMessage = document.createElement('p');
         emptyMessage.textContent = '暂无最近打开的文件';
@@ -114,33 +183,33 @@ function updateRecentFilesList() {
         recentFilesList.appendChild(emptyMessage);
         return;
     }
-    
+
     recentFiles.forEach(file => {
         const fileItem = document.createElement('div');
         fileItem.className = 'recent-file-item';
-        
+
         const fileName = document.createElement('div');
         fileName.className = 'recent-file-name';
         fileName.textContent = file.name;
-        
+
         const fileInfo = document.createElement('div');
         fileInfo.className = 'recent-file-info';
         fileInfo.textContent = `${(file.size / 1024).toFixed(1)} KB`;
-        
+
         const fileDate = document.createElement('div');
         fileDate.className = 'recent-file-date';
         const date = new Date(file.timestamp);
         fileDate.textContent = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
-        
+
         fileItem.appendChild(fileName);
         fileItem.appendChild(fileInfo);
         fileItem.appendChild(fileDate);
-        
+
         fileItem.addEventListener('click', () => {
             loadWordsFromData(JSON.parse(file.data));
             addRecentFile(file.name, file.path, file.data); // Move to top
         });
-        
+
         recentFilesList.appendChild(fileItem);
     });
 }
@@ -172,7 +241,7 @@ async function getUserVideo() {
 document.addEventListener('DOMContentLoaded', function () {
     // Load recent files
     loadRecentFiles();
-    
+
     // Set up file upload event listeners
     selectFileBtn.addEventListener('click', () => fileInput.click());
     fileInput.addEventListener('change', handleFileSelect);
@@ -254,10 +323,10 @@ function processFile(file) {
             console.log('File content:', e.target.result);
             const jsonData = JSON.parse(e.target.result);
             console.log('Parsed JSON data:', jsonData);
-            
+
             // Save to recent files
             addRecentFile(file.name, file.name, e.target.result);
-            
+
             loadWordsFromData(jsonData);
         } catch (error) {
             console.error('解析 JSON 文件失败:', error);
@@ -451,7 +520,7 @@ function showQuestion() {
     setTimeout(() => {
         generateWordList();
     }, 0); // Use setTimeout to ensure DOM updates are complete before regenerating the list
-    
+
     updateProgress();
 }
 
@@ -478,7 +547,7 @@ function showSelectedWordQuestion() {
     setTimeout(() => {
         generateWordList();
     }, 0); // Use setTimeout to ensure DOM updates are complete before regenerating the list
-    
+
     updateProgress();
 }
 

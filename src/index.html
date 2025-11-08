@@ -10,6 +10,25 @@
 
 <body>
     <div class="header"></div>
+    <!--首次打开时显示-->
+    <div class="first-open">
+        <h1 class="step-1">欢迎使用 Fast Words!</h1>
+        <div class="step-2">
+            <h2>通过JSON文件导入单词。</h2>
+            <img src="./json.png" alt="json" draggable="false">
+        </div>
+        <div class="step-3">
+            <h2>导入过的单词会显示在左侧列表。</h2>
+            <img src="./example.png" draggable="false" alt="example">
+            <button class="continue-btn">开始使用</button>
+        </div>
+    </div>
+    <!--首屏加载动画-->
+    <div class="animation">
+        <img src="./logo.png" draggable="false" alt="logo">
+        <h1 style="font-size: 50px;">Fast Words</h1>
+        <p style="margin-top: 20px;">Made By <span class="highlight">MICROPUE</span></p>
+    </div>
     <canvas id="canvas"></canvas>
     <div class="layer"></div>
     <!-- File Upload Section -->
@@ -22,7 +41,7 @@
                     <!-- Recently opened files will be listed here -->
                 </div>
             </div>
-            
+
             <!-- File Upload Area -->
             <div class="upload-container">
                 <h2>请选择单词列表文件</h2>
@@ -129,6 +148,7 @@
         </div>
     </div>
 
+    <script src="../node_modules/gsap/dist/all.js"></script>
     <script src="script.js"></script>
 </body>
 

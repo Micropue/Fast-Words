@@ -148,6 +148,84 @@ body {
     position: relative;
 }
 
+.animation {
+    background-color: var(--bg-color);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.animation img {
+    width: 200px;
+    height: 200px;
+}
+
+.first-open {
+    position: fixed;
+    z-index: 2;
+    background-color: var(--bg-color);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.first-open .step-2 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.first-open .step-3 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.first-open .step-2 img {
+    width: 500px;
+}
+.first-open .step-3 img{
+    width: 300px;
+}
+
+.continue-btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 25px;
+    background: var(--button-bg);
+    color: var(--button-text);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 25px;
+    margin-top: 20px;
+}
+
+.continue-btn:hover {
+    background: var(--button-hover-bg);
+}
+
+span.highlight {
+    font-weight: 900;
+    color: transparent;
+    background-clip: text;
+    background-image: linear-gradient(to right, rgb(76, 211, 71), rgb(0, 123, 255), rgb(255, 111, 0));
+}
+
 #canvas {
     position: absolute;
     top: 0;
@@ -375,6 +453,7 @@ header h1 {
     font-size: 14px;
     background-color: var(--bg-color);
     color: var(--text-color);
+    outline: none;
 }
 
 .filter-buttons {
@@ -808,11 +887,11 @@ header h1 {
     .file-upload-section {
         padding: 20px;
     }
-    
+
     .file-selection-container {
         flex-direction: column;
     }
-    
+
     .recent-files-container {
         max-height: 30vh;
     }
