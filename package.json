@@ -37,7 +37,25 @@
       "icon": "./src/logo.png"
     },
     "mac": {
-      "icon": "./src/logo.png"
+      "icon": "./src/logo.png",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "x64",
+            "arm64",
+            "universal"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "x64",
+            "arm64",
+            "universal"
+          ]
+        }
+      ]
     },
     "linux": {
       "icon": "./src/logo.png"
