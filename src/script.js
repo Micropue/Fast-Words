@@ -68,11 +68,11 @@ async function getUserVideo() {
         video.requestVideoFrameCallback(updateCanvas)
     } catch { }
 }
-function generateWhiteBg() {
-    document.body.style.backgroundColor = 'white'
-}
+// function generateWhiteBg() {
+//     document.body.style.backgroundColor = 'white'
+// }
 // getUserVideo()
-generateWhiteBg()
+// generateWhiteBg()
 // Initialize the app
 document.addEventListener('DOMContentLoaded', function () {
     // Set up file upload event listeners
