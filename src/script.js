@@ -484,8 +484,10 @@ function checkAnswer() {
         generateWordList();
 
         // Immediately move to next question
+        // After answering a manually selected word, switch to automatic mode
         if (selectedWord !== null) {
-            showSelectedWordQuestion();
+            selectedWord = null; // Switch to automatic mode
+            showQuestion();
         } else {
             showQuestion();
         }
@@ -501,8 +503,10 @@ function checkAnswer() {
         generateWordList();
 
         // Immediately move to next question
+        // After answering a manually selected word, switch to automatic mode
         if (selectedWord !== null) {
-            showSelectedWordQuestion();
+            selectedWord = null; // Switch to automatic mode
+            showQuestion();
         } else {
             showQuestion();
         }
@@ -580,8 +584,10 @@ function checkEnToZhAnswer(selectedOption, correctOption, buttonElement) {
         correctPopup.classList.add('show');
 
         // Immediately switch to next question
+        // After answering a manually selected word, switch to automatic mode
         if (selectedWord !== null) {
-            showSelectedWordQuestion();
+            selectedWord = null; // Switch to automatic mode
+            showQuestion();
         } else {
             showQuestion();
         }
@@ -613,8 +619,10 @@ function checkEnToZhAnswer(selectedOption, correctOption, buttonElement) {
         incorrectPopup.classList.add('show');
 
         // Immediately switch to next question
+        // After answering a manually selected word, switch to automatic mode
         if (selectedWord !== null) {
-            showSelectedWordQuestion();
+            selectedWord = null; // Switch to automatic mode
+            showQuestion();
         } else {
             showQuestion();
         }
@@ -658,7 +666,7 @@ function hideWordExplanation() {
 // Update progress display
 function updateProgress() {
     if (selectedWord !== null) {
-        progressText.textContent = `${selectedWord + 1}/${wordKeys.length} (已选择)`;
+        progressText.textContent = `${selectedWord + 1}/${wordKeys.length}`;
     } else {
         progressText.textContent = `${currentWordIndex + 1}/${wordKeys.length}`;
     }
