@@ -21,40 +21,56 @@ const createMenu = () => {
         {
             label: 'FastWords',
             submenu: [
-                { role: 'about' },
+                { role: 'about', label: '关于 FastWords' },
                 { type: 'separator' },
-                { role: 'services' },
+                { role: 'services', label: '服务' },
                 { type: 'separator' },
-                { role: 'hide' },
-                { role: 'hideOthers' },
-                { role: 'unhide' },
+                { role: 'hide', label: '隐藏 FastWords' },
+                { role: 'hideOthers', label: '隐藏其他' },
+                { role: 'unhide', label: '显示全部' },
                 { type: 'separator' },
-                { role: 'quit' }
+                { role: 'quit', label: '退出' }
             ]
         },
         {
-            label: 'Edit',
+            label: '文件',
             submenu: [
-                { role: 'undo' },
-                { role: 'redo' },
+                {
+                    label: '关闭窗口',
+                    accelerator: 'CmdOrCtrl+W',
+                    click: () => {
+                        const focusedWindow = BrowserWindow.getFocusedWindow();
+                        if (focusedWindow) {
+                            focusedWindow.close();
+                        }
+                    }
+                },
                 { type: 'separator' },
-                { role: 'cut' },
-                { role: 'copy' },
-                { role: 'paste' },
-                { role: 'pasteAndMatchStyle' },
-                { role: 'delete' },
-                { role: 'selectAll' }
             ]
         },
         {
-            label: 'Window',
+            label: '编辑',
             submenu: [
-                { role: 'minimize' },
-                { role: 'zoom' },
+                { role: 'undo', label: '撤销' },
+                { role: 'redo', label: '重做' },
                 { type: 'separator' },
-                { role: 'front' }
+                { role: 'cut', label: '剪切' },
+                { role: 'copy', label: '拷贝' },
+                { role: 'paste', label: '粘贴' },
+                { role: 'pasteAndMatchStyle', label: '粘贴并匹配样式' },
+                { role: 'delete', label: '删除' },
+                { role: 'selectAll', label: '全选' }
             ]
-        }
+        },
+        {
+            label: '窗口',
+            submenu: [
+                { role: 'minimize', label: '最小化' },
+                { role: 'zoom', label: '缩放' },
+                { type: 'separator' },
+                { role: 'front', label: '前置全部窗口' },
+            ]
+        },
     ]
 
     const menu = Menu.buildFromTemplate(template)

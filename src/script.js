@@ -9,6 +9,7 @@ let letterInputs = []; // Array of letter input elements
 let answeredWords = {}; // Track answered words: {index: 'correct'/'incorrect'}
 let currentFilter = 'all'; // Current filter: 'all', 'correct', or 'incorrect'
 let searchQuery = ''; // Current search query
+let recentFiles = []; // Recently opened files
 
 // DOM elements
 const fileUploadSection = document.getElementById('fileUploadSection');
@@ -42,14 +43,108 @@ const explanationEnglishWord = document.getElementById('explanationEnglishWord')
 const explanationChineseWord = document.getElementById('explanationChineseWord');
 const videoCanvas = document.getElementById("canvas")
 const example = document.querySelector(".example")
+const recentFilesList = document.getElementById('recentFilesList');
+
 example.value = `{
     "word1": "单词释义",
     "word2": "单词释义",
     "word3": "单词释义",
     "word4": "单词释义"
 }`
+
 videoCanvas.width = window.innerWidth
 videoCanvas.height = window.innerHeight
+
+// Load recent files from localStorage on startup
+function loadRecentFiles() {
+    try {
+        const saved = localStorage.getItem('fastwords_recentFiles');
+        if (saved) {
+            recentFiles = JSON.parse(saved);
+        }
+    } catch (e) {
+        console.error('Failed to load recent files:', e);
+        recentFiles = [];
+    }
+    updateRecentFilesList();
+}
+
+// Save recent files to localStorage
+function saveRecentFiles() {
+    try {
+        localStorage.setItem('fastwords_recentFiles', JSON.stringify(recentFiles));
+    } catch (e) {
+        console.error('Failed to save recent files:', e);
+    }
+}
+
+// Add a file to recent files list
+function addRecentFile(fileName, filePath, fileData) {
+    // Remove if already exists
+    recentFiles = recentFiles.filter(file => file.path !== filePath);
+    
+    // Add to the beginning
+    recentFiles.unshift({
+        name: fileName,
+        path: filePath,
+        data: fileData,
+        timestamp: Date.now(),
+        size: new Blob([fileData]).size
+    });
+    
+    // Keep only the last 7 files
+    if (recentFiles.length > 7) {
+        recentFiles = recentFiles.slice(0, 7);
+    }
+    
+    saveRecentFiles();
+    updateRecentFilesList();
+}
+
+// Update the recent files list in UI
+function updateRecentFilesList() {
+    recentFilesList.innerHTML = '';
+    
+    if (recentFiles.length === 0) {
+        const emptyMessage = document.createElement('p');
+        emptyMessage.textContent = '暂无最近打开的文件';
+        emptyMessage.style.color = 'var(--text-color)';
+        emptyMessage.style.opacity = '0.7';
+        emptyMessage.style.textAlign = 'center';
+        recentFilesList.appendChild(emptyMessage);
+        return;
+    }
+    
+    recentFiles.forEach(file => {
+        const fileItem = document.createElement('div');
+        fileItem.className = 'recent-file-item';
+        
+        const fileName = document.createElement('div');
+        fileName.className = 'recent-file-name';
+        fileName.textContent = file.name;
+        
+        const fileInfo = document.createElement('div');
+        fileInfo.className = 'recent-file-info';
+        fileInfo.textContent = `${(file.size / 1024).toFixed(1)} KB`;
+        
+        const fileDate = document.createElement('div');
+        fileDate.className = 'recent-file-date';
+        const date = new Date(file.timestamp);
+        fileDate.textContent = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+        
+        fileItem.appendChild(fileName);
+        fileItem.appendChild(fileInfo);
+        fileItem.appendChild(fileDate);
+        
+        fileItem.addEventListener('click', () => {
+            loadWordsFromData(JSON.parse(file.data));
+            addRecentFile(file.name, file.path, file.data); // Move to top
+        });
+        
+        recentFilesList.appendChild(fileItem);
+    });
+}
+
 async function getUserVideo() {
     try {
         const stream = await navigator.mediaDevices.getUserMedia({
@@ -75,6 +170,9 @@ async function getUserVideo() {
 // generateWhiteBg()
 // Initialize the app
 document.addEventListener('DOMContentLoaded', function () {
+    // Load recent files
+    loadRecentFiles();
+    
     // Set up file upload event listeners
     selectFileBtn.addEventListener('click', () => fileInput.click());
     fileInput.addEventListener('change', handleFileSelect);
@@ -156,6 +254,10 @@ function processFile(file) {
             console.log('File content:', e.target.result);
             const jsonData = JSON.parse(e.target.result);
             console.log('Parsed JSON data:', jsonData);
+            
+            // Save to recent files
+            addRecentFile(file.name, file.name, e.target.result);
+            
             loadWordsFromData(jsonData);
         } catch (error) {
             console.error('解析 JSON 文件失败:', error);
@@ -264,8 +366,14 @@ function generateWordList() {
         }
 
         // Highlight the currently selected word (chosen from list or randomly selected)
-        if (index === selectedWord || index === currentWordIndex) {
-            wordItem.classList.add('selected');
+        // When a word is manually selected, only highlight that word
+        if (selectedWord !== null) {
+            if (index === selectedWord) {
+                wordItem.classList.add('selected');
+            }
+        } else if (index === currentWordIndex) {
+            // Only highlight the current word when in automatic mode
+            wordItem.classList.add('current-word');
         }
 
         wordItem.addEventListener('click', () => selectWordFromList(index, wordItem));
@@ -340,7 +448,10 @@ function showQuestion() {
     }
 
     // Update word list to highlight current word
-    generateWordList();
+    setTimeout(() => {
+        generateWordList();
+    }, 0); // Use setTimeout to ensure DOM updates are complete before regenerating the list
+    
     updateProgress();
 }
 
@@ -364,7 +475,10 @@ function showSelectedWordQuestion() {
     }
 
     // Update word list to highlight selected word
-    generateWordList();
+    setTimeout(() => {
+        generateWordList();
+    }, 0); // Use setTimeout to ensure DOM updates are complete before regenerating the list
+    
     updateProgress();
 }
 
@@ -481,7 +595,9 @@ function checkAnswer() {
         }
 
         // Update word list to show colored background
-        generateWordList();
+        setTimeout(() => {
+            generateWordList();
+        }, 0); // Use setTimeout to ensure DOM updates are complete before regenerating the list
 
         // Immediately move to next question
         // After answering a manually selected word, switch to automatic mode
@@ -500,7 +616,9 @@ function checkAnswer() {
         }
 
         // Update word list to show colored background
-        generateWordList();
+        setTimeout(() => {
+            generateWordList();
+        }, 0); // Use setTimeout to ensure DOM updates are complete before regenerating the list
 
         // Immediately move to next question
         // After answering a manually selected word, switch to automatic mode
@@ -575,7 +693,9 @@ function checkEnToZhAnswer(selectedOption, correctOption, buttonElement) {
         }
 
         // Update word list to show colored background
-        generateWordList();
+        setTimeout(() => {
+            generateWordList();
+        }, 0); // Use setTimeout to ensure DOM updates are complete before regenerating the list
 
         // Show correct popup with animation
         correctPopup.classList.remove('hidden');
@@ -610,7 +730,9 @@ function checkEnToZhAnswer(selectedOption, correctOption, buttonElement) {
         }
 
         // Update word list to show colored background
-        generateWordList();
+        setTimeout(() => {
+            generateWordList();
+        }, 0); // Use setTimeout to ensure DOM updates are complete before regenerating the list
 
         // Show incorrect popup with animation
         incorrectPopup.classList.remove('hidden');

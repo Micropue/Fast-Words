@@ -14,18 +14,29 @@
     <div class="layer"></div>
     <!-- File Upload Section -->
     <div id="fileUploadSection" class="file-upload-section">
-        <div class="upload-container">
-            <h2>请选择单词列表文件</h2>
-            <p>拖拽 JSON 文件到此区域或点击选择文件</p>
-            <input type="file" id="fileInput" accept=".json" style="display: none;">
-            <button id="selectFileBtn" class="upload-btn">选择文件</button>
-            <div id="dropZone" class="drop-zone">
-                <p>拖拽文件到这里</p>
+        <div class="file-selection-container">
+            <!-- Recently Opened Files Section -->
+            <div class="recent-files-container">
+                <h2>最近打开的文件</h2>
+                <div id="recentFilesList" class="recent-files-list">
+                    <!-- Recently opened files will be listed here -->
+                </div>
             </div>
-            <div id="fileInfo" class="file-info"></div>
+            
+            <!-- File Upload Area -->
+            <div class="upload-container">
+                <h2>请选择单词列表文件</h2>
+                <p>拖拽 JSON 文件到此区域或点击选择文件</p>
+                <input type="file" id="fileInput" accept=".json" style="display: none;">
+                <button id="selectFileBtn" class="upload-btn">选择文件</button>
+                <div id="dropZone" class="drop-zone">
+                    <p>拖拽文件到这里</p>
+                </div>
+                <div id="fileInfo" class="file-info"></div>
+                <h2>事例格式</h2>
+                <textarea type="text" readonly class="example letter-input"></textarea>
+            </div>
         </div>
-        <h2>事例格式</h2>
-        <textarea type="text" readonly class="example letter-input"></textarea>
     </div>
 
     <!-- Main App Section (Initially Hidden) -->

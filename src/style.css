@@ -195,6 +195,78 @@ body {
     text-align: center;
 }
 
+.file-selection-container {
+    display: flex;
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+    height: 100%;
+}
+
+.recent-files-container {
+    flex: 1;
+    text-align: left;
+    background-color: var(--sidebar-bg);
+    border-radius: 10px;
+    padding: 20px;
+    max-height: 70vh;
+    overflow-y: auto;
+    border: 1px solid var(--border-color);
+}
+
+.recent-files-container h2 {
+    color: var(--text-color);
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.recent-files-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.recent-file-item {
+    padding: 12px 15px;
+    background-color: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s ease;
+}
+
+.recent-file-item:hover {
+    background-color: var(--word-item-hover-bg);
+}
+
+.recent-file-name {
+    font-weight: 500;
+    color: var(--text-color);
+    margin-bottom: 5px;
+}
+
+.recent-file-info {
+    font-size: 0.8rem;
+    color: var(--text-color);
+    opacity: 0.7;
+    margin-bottom: 3px;
+}
+
+.recent-file-date {
+    font-size: 0.8rem;
+    color: var(--text-color);
+    opacity: 0.7;
+}
+
+.upload-container {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
 .upload-container h2 {
     color: var(--text-color);
     margin-bottom: 15px;
@@ -230,6 +302,7 @@ body {
     transition: all 0.3s ease;
     margin-bottom: 20px;
     background-color: var(--drop-zone-bg);
+    width: 100%;
 }
 
 .drop-zone.dragover {
@@ -247,6 +320,12 @@ body {
     opacity: 0.7;
     font-size: 0.9rem;
     min-height: 20px;
+    margin-bottom: 20px;
+}
+
+.example {
+    width: 100%;
+    max-width: 400px;
 }
 
 .hidden {
@@ -430,6 +509,7 @@ header h1 {
     justify-content: center;
     gap: 5px;
     margin-bottom: 10px;
+    flex-wrap: wrap;
 }
 
 .letter-input {
@@ -562,6 +642,10 @@ header h1 {
     transition: background-color 0.2s;
     border: 1px solid var(--word-item-border);
     color: var(--text-color);
+    word-wrap: break-word;
+    word-break: break-word;
+    white-space: normal;
+    hyphens: auto;
 }
 
 .word-item:hover {
@@ -723,5 +807,13 @@ header h1 {
 
     .file-upload-section {
         padding: 20px;
+    }
+    
+    .file-selection-container {
+        flex-direction: column;
+    }
+    
+    .recent-files-container {
+        max-height: 30vh;
     }
 }
